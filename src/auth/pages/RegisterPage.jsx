@@ -1,12 +1,27 @@
 import { Link as RouterLink } from "react-router-dom"
-import Google from "@mui/icons-material/Google"
 import { Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { AuthLayout } from "../layout/AuthLayout"
+import { useForm } from "../../hooks/";
+
+const formData = {
+  email: 'emaill@test.com',
+  password: '123456',
+  displayName: 'Marcel Cabrera'
+};
 
 export const RegisterPage = () => {
+
+  const { email, password, displayName, onInputChange, formState } = useForm(formData);
+
+  const onSubmit = (event)=>{
+    event.preventDefault();
+
+    // TO DO: validate form
+  }
+
   return (
     <AuthLayout title="Register">
-        <form>
+        <form onSubmit={onSubmit}>
           <Grid container>
           <Grid item xs={12} sx={{mb: 2}}>
               <TextField
@@ -14,6 +29,9 @@ export const RegisterPage = () => {
                 placeholder="Your full name"
                 type="text"
                 fullWidth
+                name="displayName"
+                value={displayName}
+                onChange={onInputChange}
               />
             </Grid>
 
@@ -23,6 +41,9 @@ export const RegisterPage = () => {
                 placeholder="user@email.com"
                 type="email"
                 fullWidth
+                name="email"
+                value={email}
+                onChange={onInputChange}
               />
             </Grid>
 
@@ -32,13 +53,16 @@ export const RegisterPage = () => {
                 placeholder="Enter your password"
                 type="password"
                 fullWidth
+                name="password"
+                value={password}
+                onChange={onInputChange}
               />
             </Grid>
 
             <Grid container spacing={2}
             >
               <Grid item xs={12}>
-                <Button variant="contained" fullWidth>
+                <Button type="submit" variant="contained" fullWidth>
                   Register
                 </Button>
               </Grid>
