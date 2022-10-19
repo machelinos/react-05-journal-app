@@ -2,21 +2,29 @@ import { Link as RouterLink } from "react-router-dom"
 import { Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { AuthLayout } from "../layout/AuthLayout"
 import { useForm } from "../../hooks/";
+import { useState } from "react";
 
 const formData = {
-  email: 'emaill@test.com',
-  password: '123456',
-  displayName: 'Marcel Cabrera'
+  email: '',
+  password: '',
+  displayName: ''
 };
+
+const formValidations = {
+  email: [(value)=>value.includes('@'), 'Email must contain an @'],
+  password: [(value)=>value.length>5, 'Password must be at least 6 characters'],
+  displayName: [(value)=>value.length>0, 'Name is required']
+}
 
 export const RegisterPage = () => {
 
-  const { email, password, displayName, onInputChange, formState } = useForm(formData);
+  const { email, password, displayName, onInputChange, formState, emailValid, passwordValid, displayNameValid, formValid } = useForm(formData, formValidations);
+
+  const [formSubmitted, setFormSubmitted] = useState(false)
 
   const onSubmit = (event)=>{
     event.preventDefault();
-
-    // TO DO: validate form
+    setFormSubmitted(true);
   }
 
   return (
@@ -32,6 +40,8 @@ export const RegisterPage = () => {
                 name="displayName"
                 value={displayName}
                 onChange={onInputChange}
+                error={!!displayNameValid && formSubmitted}
+                helperText={formSubmitted ? displayNameValid : null}
               />
             </Grid>
 
@@ -44,6 +54,8 @@ export const RegisterPage = () => {
                 name="email"
                 value={email}
                 onChange={onInputChange}
+                error={!!emailValid && formSubmitted}
+                helperText={ formSubmitted ? emailValid : null}
               />
             </Grid>
 
@@ -56,13 +68,15 @@ export const RegisterPage = () => {
                 name="password"
                 value={password}
                 onChange={onInputChange}
+                error={!!passwordValid && formSubmitted}
+                helperText={ formSubmitted ? passwordValid : null}
               />
             </Grid>
 
             <Grid container spacing={2}
             >
               <Grid item xs={12}>
-                <Button type="submit" variant="contained" fullWidth>
+                <Button type="submit" variant="contained" disabled={!formValid && formSubmitted} fullWidth>
                   Register
                 </Button>
               </Grid>
