@@ -1,9 +1,11 @@
 import TurnedInNot from "@mui/icons-material/TurnedInNot"
 import { Box, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material"
+import { format } from "date-fns";
 import { useSelector } from "react-redux"
 
 export const Sidebar = ({drawerWidth}) => {
     const { displayName } = useSelector(state=>state.auth);
+    const { notes} = useSelector(state=>state.journal);
 
   return (
     <Box
@@ -28,22 +30,26 @@ export const Sidebar = ({drawerWidth}) => {
 
             <List>
                 {
-                    ['January', 'February', 'March'].map(text=>(
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <TurnedInNot />
-                                </ListItemIcon>
+                    notes.map(({id, date, title})=>{
+                        const noteDate = format(date,'d MMMM u');
 
-                                <Grid container>
-                                    <ListItemText primary={text} />
-                                    <ListItemText secondary='Lorem ipsum dolor siot amet' />
-                                </Grid>
+                        return (
+                            <ListItem key={id} disablePadding>
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        <TurnedInNot />
+                                    </ListItemIcon>
 
-                            </ListItemButton>
+                                    <Grid container>
+                                        <ListItemText primary={noteDate} />
+                                        <ListItemText secondary={title} />
+                                    </Grid>
 
-                        </ListItem>
-                    ))
+                                </ListItemButton>
+
+                            </ListItem>
+                        )}
+                    )
                 }
             </List>
 
