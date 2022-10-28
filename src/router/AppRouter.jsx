@@ -17,7 +17,7 @@ export const AppRouter = () => {
     )
   }
 
-  dispatch(startLoadingNotes());
+  if(status==='authenticated') dispatch(startLoadingNotes());
 
   return (
     <Routes>

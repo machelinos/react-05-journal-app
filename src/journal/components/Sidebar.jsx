@@ -1,11 +1,17 @@
 import TurnedInNot from "@mui/icons-material/TurnedInNot"
 import { Box, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material"
 import { format } from "date-fns";
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { setActiveNote } from "../../store/journal/journalSlice";
 
 export const Sidebar = ({drawerWidth}) => {
     const { displayName } = useSelector(state=>state.auth);
     const { notes} = useSelector(state=>state.journal);
+    const dispatch = useDispatch();
+
+    const onClickNote = (note)=>{
+        dispatch(setActiveNote(note));
+    }
 
   return (
     <Box
@@ -30,11 +36,15 @@ export const Sidebar = ({drawerWidth}) => {
 
             <List>
                 {
-                    notes.map(({id, date, title})=>{
+                    notes.map(({id, body, date, title, imageUrls = []})=>{
                         const noteDate = format(date,'d MMMM u');
 
                         return (
-                            <ListItem key={id} disablePadding>
+                            <ListItem
+                                key={id}
+                                disablePadding
+                                onClick={()=>{onClickNote({id, body, date, title, imageUrls})}}
+                            >
                                 <ListItemButton>
                                     <ListItemIcon>
                                         <TurnedInNot />
