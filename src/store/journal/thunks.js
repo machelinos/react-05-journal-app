@@ -1,7 +1,7 @@
-import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { FirestoreDb } from "../../firebase/config";
 import { loadNotes, uploadFiles } from "../../helpers";
-import { addNewNote, getNotes, setActiveNote, setSavingNote, setImagesToActiveNote, updateNote } from "./";
+import { addNewNote, deleteNote, getNotes, setActiveNote, setSavingNote, setImagesToActiveNote, updateNote } from "./";
 
 export const startNewNote = () => {
     return async (dispatch, getState) => {
@@ -49,6 +49,22 @@ export const startSavingNote = () => {
         await updateDoc(docRef, noteToSave);
 
         dispatch(updateNote(activeNote));
+    }
+}
+
+export const startDeletingNote = () => {
+    return async (dispatch, getState) => {
+        dispatch(setSavingNote());
+
+        const { uid } = getState().auth;
+        const { activeNote } = getState().journal;
+
+        const docRef = doc(FirestoreDb,`${uid}/journalApp/notes/${activeNote.id}`);
+        await deleteDoc(docRef);
+
+        dispatch(deleteNote(activeNote));
+
+
     }
 }
 
